@@ -1,0 +1,40 @@
+flowchart TD
+    telemetry[telemetry<br/>pi-telemetry]
+    schema[schema<br/>pi-schema]
+    chord[chord]
+    tui[tui<br/>pi-tui]
+    codemode[codemode<br/>pi-codemode]
+    mcp[mcp<br/>pi-mcp]
+    ai[ai<br/>pi-ai]
+    durable[durable<br/>pi-durable]
+    env[env<br/>pi-env]
+    agent[agent<br/>pi-agent-core]
+    coding[coding-agent<br/>pi-coding-agent]
+
+    chord --> schema
+    chord --> telemetry
+    ai --> schema
+    ai --> telemetry
+    durable --> chord
+    durable --> ai
+    durable --> codemode
+    durable --> schema
+    durable --> telemetry
+    env --> chord
+    env --> durable
+    agent --> ai
+    agent --> schema
+    coding --> agent
+    coding --> ai
+    coding --> codemode
+    coding --> mcp
+    coding --> tui
+
+    classDef base fill:#e8f5e9,stroke:#2e7d32,color:#111;
+    classDef runtime fill:#e3f2fd,stroke:#1565c0,color:#111;
+    classDef app fill:#fff3e0,stroke:#ef6c00,color:#111;
+    class telemetry,schema base;
+    class chord,tui,codemode,mcp,ai,durable runtime;
+    class env,agent,coding app;
+
+    %% 箭头统一表示“使用方 --> 被依赖方”；仅绘制 package.json 中可核实的直接运行时依赖。
