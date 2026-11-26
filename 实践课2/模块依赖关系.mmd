@@ -1,40 +1,41 @@
-flowchart TD
-    telemetry[telemetry<br/>pi-telemetry]
-    schema[schema<br/>pi-schema]
+flowchart BT
+  subgraph L1[基础能力与协议]
+    telemetry[telemetry]
+    schema[schema]
+    tui[tui]
+    codemode[codemode]
+    mcp[mcp]
+  end
+  subgraph L2[复合库]
     chord[chord]
-    tui[tui<br/>pi-tui]
-    codemode[codemode<br/>pi-codemode]
-    mcp[mcp<br/>pi-mcp]
-    ai[ai<br/>pi-ai]
-    durable[durable<br/>pi-durable]
-    env[env<br/>pi-env]
-    agent[agent<br/>pi-agent-core]
-    coding[coding-agent<br/>pi-coding-agent]
+    ai[ai]
+  end
+  subgraph L3[运行时能力]
+    durable[durable]
+    env[env]
+    agent[agent]
+  end
+  subgraph L4[应用产品]
+    codingAgent[coding-agent]
+  end
+  chord --> schema
+  chord --> telemetry
+  ai --> schema
+  ai --> telemetry
+  durable --> chord
+  durable --> ai
+  durable --> codemode
+  durable --> schema
+  durable --> telemetry
+  env --> chord
+  env --> durable
+  agent --> ai
+  agent --> schema
+  codingAgent --> agent
+  codingAgent --> ai
+  codingAgent --> codemode
+  codingAgent --> mcp
+  codingAgent --> tui
 
-    chord --> schema
-    chord --> telemetry
-    ai --> schema
-    ai --> telemetry
-    durable --> chord
-    durable --> ai
-    durable --> codemode
-    durable --> schema
-    durable --> telemetry
-    env --> chord
-    env --> durable
-    agent --> ai
-    agent --> schema
-    coding --> agent
-    coding --> ai
-    coding --> codemode
-    coding --> mcp
-    coding --> tui
-
-    classDef base fill:#e8f5e9,stroke:#2e7d32,color:#111;
-    classDef runtime fill:#e3f2fd,stroke:#1565c0,color:#111;
-    classDef app fill:#fff3e0,stroke:#ef6c00,color:#111;
-    class telemetry,schema base;
-    class chord,tui,codemode,mcp,ai,durable runtime;
-    class env,agent,coding app;
-
-    %% 箭头统一表示“使用方 --> 被依赖方”；仅绘制 package.json 中可核实的直接运行时依赖。
+  %% 箭头统一表示“使用方 --> 被依赖方”；仅绘制 package.json 中可核实的直接运行时依赖（dependencies）。
+  %% chord 的 esbuild/react/ws 为可选 peerDependencies，不是这 11 个模块之间的内部运行时依赖，故不绘制。
