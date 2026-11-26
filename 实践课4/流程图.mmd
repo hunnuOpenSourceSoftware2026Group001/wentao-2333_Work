@@ -1,0 +1,29 @@
+flowchart LR
+    subgraph 用户层
+    U[用户 / 终端输入]
+    end
+    subgraph Pi 客户端（coding-agent）
+    CA[coding-agent CLI / 交互层]
+    end
+    subgraph Agent 运行时（agent）
+    AG[agent 运行时 / Agent 循环 runLoop]
+    end
+    subgraph 模型层（ai）
+    AI[ai：统一 Provider API / streamAssistantResponse]
+    end
+    subgraph 远程模型服务
+    RM[远程 LLM 服务]
+    end
+
+    U -->|指令| CA
+    CA -->|驱动| AG
+    AG -->|第 n 轮请求模型| AI
+    AI -->|调用模型| RM
+    RM -->|模型回复| AI
+    AI -->|返回（含工具调用 / 最终答案）| AG
+    AG -->|工具结果写入上下文| AG
+    AG -->|呈现回复| CA
+    CA -->|展示| U
+
+    style RM fill:#f9f,stroke:#333
+    style AI fill:#bbf,stroke:#333

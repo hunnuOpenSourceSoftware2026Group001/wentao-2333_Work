@@ -1,0 +1,19 @@
+flowchart TD
+    Start[ A 阶段结束：<br/>Pi 已读到并回答了启动命令 ] -->|退出 Pi，<br/>加 -c 重新启动| Restore[ 恢复旧会话 ]
+    Start -->|输入 /new，<br/>新建会话| New[ 新建会话 ]
+
+    Restore --> R1[ Pi 打开 A 阶段保存的<br/>会话文件 ]
+    Restore --> R2[ Pi 从文件中恢复<br/>历史消息 ]
+    Restore --> R3[ 用户输入：<br/>"接着上次的待办……" ]
+    Restore --> R4[ Pi 把恢复出的历史消息<br/>和本次提问一起<br/>用于请求模型 ]
+    Restore --> R5[ 回答包含 A 阶段的<br/>完整启动命令，<br/>无需重新读文件 ]
+
+    New --> N1[ Pi 创建聊天历史为空<br/>的新会话 ]
+    New --> N2[ 用户输入完全相同的话 ]
+    New --> N3[ Pi 只用本次提问<br/>请求模型 ]
+    New --> N4[ 新会话历史里没有<br/>A 阶段读到的启动命令 ]
+    New --> N5[ 若缺少命令，直接说明<br/>（或重新读文件） ]
+
+    style Start fill:#e1f5e1,stroke:#2e7d32
+    style R5 fill:#fff9c4,stroke:#f9a825
+    style N5 fill:#ffcdd2,stroke:#c62828

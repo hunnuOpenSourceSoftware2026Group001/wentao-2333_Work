@@ -1,0 +1,21 @@
+sequenceDiagram
+    autonumber
+    participant U as 用户
+    participant CA as Pi 交互层<br/>coding-agent
+    participant AG as Agent 运行时<br/>agent / runLoop
+    participant AI as 模型请求层<br/>ai / streamAssistantResponse
+    participant RT as read 工具<br/>durable / read.ts
+
+    U->>CA: 输入指令<br/>"请 read handoff.txt"
+    CA->>AG: 驱动 Agent 循环
+    AG->>AI: 第 1 轮请求模型
+    AI-->>AG: 返回工具调用<br/>(read, path=handoff.txt)
+    AG->>RT: 执行 read 工具<br/>executeToolCalls
+    RT-->>AG: 返回文件内容
+    AG->>AG: 工具结果写入上下文<br/>currentContext.messages.push(result)
+    AG->>AI: 第 2 轮请求模型<br/>（带上工具结果）
+    AI-->>AG: 返回最终答案<br/>(原样输出文件内容)
+    AG->>CA: 呈现回复
+    CA->>U: 显示最终答案
+
+    note over AG,RT: 第 1 轮：模型决定调用 read 工具<br/>Agent 执行工具，把结果写入上下文<br/>第 2 轮：模型带工具结果再次请求
